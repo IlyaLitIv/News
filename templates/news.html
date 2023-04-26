@@ -1,0 +1,85 @@
+{% extends 'flatpages/default.html' %} 
+{% load custom_filters %}
+
+{% block title %}
+News list
+{% endblock title %}
+ 
+{% block content %}
+    <h1>Количество новостей - {{ news|length }}</h1>
+    <h3> {{ value1|default_if_none:"ничего" }} </h3>
+    <hr>
+
+    {% if news %}
+        <table>
+            <tr>
+                <td>
+                    Название
+                </td>
+                <td>
+                    Дата публикации
+                </td>
+                <td>
+                    Описание
+                </td>
+                <td>
+                    Категория
+                </td>
+            </tr>
+        {% for new in news %}
+            <tr>
+                <td>
+                    <a href="{% url 'new' new.id %}">{{ new.name|title|filter_message }}</a>
+                    <a href="{% url 'new_delete' new.id %}"><u> Удалить </u></a>
+                    <a href="{% url 'new_update' new.id %}"><u>Редактировать</u></a>
+                   
+                </td>
+                <td>
+                    {{ new.name|filter_message }}
+                </td>
+                <td>
+                    {{ new.time_creation|date:'M d Y'}}
+                </td>
+                <td>
+                    {{ new.description|truncatechars:50|filter_message}}
+                </td>
+                <td>
+                    {{ new.category.name }}
+                </td>
+            </tr>
+        {% endfor %}
+        </table>
+    {% else %}
+        <h2> Новостей нет!</h2>
+    {% endif %}
+
+{% if is_paginated %}
+ 
+{% if page_obj.has_previous %}
+    <a href="?page=1">First</a>
+    <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+{% endif %}
+
+{% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num %}
+        <a>{{ num }}</a>
+    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a href="?page={{ num }}">{{ num }}</a>
+    {% endif %}
+{% endfor %}
+
+{% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">>>></a>
+    <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+{% endif %}
+
+{% endif %}
+
+<form method="POST">
+    {% csrf_token %}
+ 
+    {{ form }}
+    <input type="submit" value="Добавить новость"> 
+</form> 
+
+{% endblock content %}

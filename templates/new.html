@@ -1,0 +1,33 @@
+{% extends 'flatpages/default.html' %} 
+ 
+{% block title %}
+News
+{% endblock title %}
+{% load custom_filters %} 
+
+{% block content %}
+<table>
+    <tr>
+        <td>
+            Название
+        </td>
+        <td>
+            Дата публикации
+        </td>
+        <td>
+            Описание
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {{ new.name|filter_message }}
+        </td>
+        <td>
+            {{ new.time_creation|date:'d M Y H:I'}}
+        </td>
+        <td>
+            {{ new.description|filter_message }}
+        </td>
+    </tr>
+</table>
+{% endblock content %}
