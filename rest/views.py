@@ -7,3 +7,5 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 
 class AddPost(PermissionRequiredMixin, CreateView):
     permission_required = ('rest.add_post', )
+class ChangePost(PermissionRequiredMixin, CreateView):
+    permission_required = ('rest.change_post', )
