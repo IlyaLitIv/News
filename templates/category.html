@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %} News {% endblock %}
+
+{% block content %}
+
+{% if category.id %}
+
+<div class="subscribe">
+    <em> 
+        Subscribe to 
+        <strong>{{ category }}?</strong>
+    </em>
+    <a href="{% url 'subscribe' category.id %}" class="button button-outline">Subscribe</a>
+</div>
+
+{% endif %}
+
+{% include 'news.html' %}
+
+{% endblock %}
