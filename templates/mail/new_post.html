@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Post</title>
+</head>
+<body>
+    
+<h1>New Post in category</h1>
+<p>
+    In the category: <strong> {{category.name}} </strong> new post at by
+    <strong> {{post.author}} </strong>
+</p>
+<a href="http://127.0.0.1:8000{% url 'news:details' news.id %}">
+    <h2> {{post.title}} </h2>
+</a>
+
+<p>
+    {{post.preview}}
+</p>
+
+</body>
+</html>
