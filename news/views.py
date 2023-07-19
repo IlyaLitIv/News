@@ -11,7 +11,8 @@ from .models import News,Category
 from .filters import NewsFilter
 from .forms import NewsForm
 from datetime import datetime
-from django.template.loader import render_to_string
+# from django.template.loader import render_to_string
+
 from django.core.mail import EmailMultiAlternatives
 
 from django.contrib.auth.mixins import LoginRequiredMixin

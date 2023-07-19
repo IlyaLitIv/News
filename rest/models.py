@@ -1,14 +1,25 @@
+from ipaddress import summarize_address_range
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Sum
 
 # Create your models here.
 
 class Author(models.Model):
-    raiting = models.IntegerField()
-    def update_raiting(self):
-        self.raiting = self.raiting*3 
-        self.save()    
-    author = models.OneToOneField(User, on_delete = models.CASCADE)
+    authorUser = models.OneToOneField(User, on_delete=models.CASCADE)
+    raitingAuthor = models.SmallIntegerField(default=0)
+
+    def update_rating(self):
+        postRat = self.post_set.all().aggregate(postRating=summarize_address_range('rating'))
+        pRat = 0
+        pRat += postRat.get('postRating')
+
+        commentRat = self.authorUser.comment_set.all().aggregate(commentRating=Sum('rating'))
+        cRat = 0
+        cRat += commentRat.get('commentRating')
+
+        self.raitingAuthor = pRat * 3 + cRat
+        self.save()
 
 
 class Category(models.Model):
@@ -46,14 +57,20 @@ class PostCategory(models.Model):
     
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete = models.CASCADE)
-    user = models.ForeignKey(User, on_delete = models.CASCADE)
-    body = models.TextField(default = "Содержание")
-    time_creation = models.DateTimeField(auto_now_add = True)
-    raiting = models.IntegerField()
+    commentPost = models.ForeignKey(Post, on_delete=models.CASCADE)
+    commentUser = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField()
+    dateCreation = models.DateTimeField(auto_now_add=True)
+    rating = models.SmallIntegerField(default=0)
+
+    def __str__(self):
+        return self.commentUser.username
+        # return self.commentPost.author.authorUser.username
+
     def like(self):
-        self.raiting += 1
-        self.save()   
-    def dislike(self):
-        self.raiting -= 1
-        self.save()  
+        self.rating += 1
+        self.save()
+
+    def deslike(self):
+        self.rating -= 1
+        self.save()
